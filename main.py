@@ -117,3 +117,5 @@ while True:
 
     # Cap the frame rate
     pygame.time.Clock().tick(5)
+
+    print(" ")
