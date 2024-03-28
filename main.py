@@ -42,7 +42,7 @@ scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, (bulb_img_size[0]*0.15,
 # Menu Button
 menuIcon_img = pygame.image.load('resources\images\menu_icon.png')
 menuIcon_img_size = menuIcon_img.get_size()
-scaled_menuIcon_img = pygame.transform.scale(menuIcon_img, (menuIcon_img_size[0]*0.2, menuIcon_img_size[1]*0.2))
+scaled_menuIcon_img = pygame.transform.scale(menuIcon_img, (menuIcon_img_size[0]*WINDOW_WIDTH//9600, menuIcon_img_size[1]*WINDOW_WIDTH//9600))
 scaled_menuIcon_img_size = scaled_menuIcon_img.get_size()
 menu_btn_x = WINDOW_WIDTH*0.01
 menu_btn_y = WINDOW_HEIGHT*0.1
@@ -80,9 +80,6 @@ while True:
 
 
 
-
-
-
     # Fill the background
     window.fill(OFF_WHITE)
 
@@ -97,7 +94,7 @@ while True:
 
     # Draw the side element tab
     if menu_open:
-        pygame.draw.rect(window, LIGHT_BLUE, (0, 70, WINDOW_WIDTH*0.2, WINDOW_HEIGHT-70), border_top_right_radius = 50)
+        pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.2, WINDOW_HEIGHT), border_top_right_radius = 50)
         window.blit(scaled_menuIcon_img, (menu_btn_x, menu_btn_y))
 
         # Draw Bulb on Tab
@@ -105,7 +102,7 @@ while True:
 
 
     else:
-        pygame.draw.rect(window, LIGHT_BLUE, (0, 70, WINDOW_WIDTH*0.06, WINDOW_HEIGHT-70), border_top_right_radius = 50)
+        pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.06, WINDOW_HEIGHT), border_top_right_radius = 50)
         window.blit(scaled_menuIcon_img, (menu_btn_close_x, menu_btn_y))
 
 
