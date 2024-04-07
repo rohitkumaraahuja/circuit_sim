@@ -24,7 +24,7 @@ def source_linked_list(linked_list): # Returns the source supply component:
 def form_connection(linked_list, ID1, ID2): # Connects two components:
     linked_list[ID1] = (linked_list[ID1][0], linked_list[ID1][1], ID2)
 
-def remove_connection(linked_list, ID1, ID2): # Removes connections:
+def remove_connection(linked_list, ID1): # Removes connections:
     if linked_list[ID1][2] == None:
         print("No connection found")
     else:
