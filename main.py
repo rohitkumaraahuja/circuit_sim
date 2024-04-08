@@ -219,7 +219,7 @@ while True:
 
     # Draw the side element tab
     if menu_open:
-        pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.2, WINDOW_HEIGHT), border_top_right_radius = 50)
+        pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05,WINDOW_WIDTH*0.2, WINDOW_HEIGHT), border_top_right_radius = 50)
         window.blit(scaled_menuIcon_img, (menu_btn_x, menu_btn_y))
 
         # Draw Tools on Tab
