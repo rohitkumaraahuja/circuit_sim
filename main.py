@@ -16,6 +16,7 @@ def is_hovering(rect_tuple, mouse_pos):
     y0 = rect_tuple[0][1]
     x1 = rect_tuple[1][0]
     y1 = rect_tuple[1][1]
+
     if mouse_pos[0] >= x0 and mouse_pos[1] >= y0 and mouse_pos[0] <= x1 and mouse_pos[1] <= y1:
         return True
     return False
@@ -111,26 +112,73 @@ menu_open = False
 
 
 
+
+
+
+
+
+
+# Importing Images
+
+
+# Battery Images
+battery_img = pygame.image.load('resources/images/battery.png')
+battery_img_size = battery_img.get_size()
+scaled_battery_img = pygame.transform.scale(battery_img, (battery_img_size[0]*0.08, battery_img_size[1]*0.08))
+
+
+# Bulb Images
+
+bulbOn_rawIMG = 'resources/images/bulb_on.png'
+bulbOff_rawIMG = 'resources/images/bulb_off.png'
+bulbOn_img = pygame.image.load(bulbOn_rawIMG)
+bulbOff_img = pygame.image.load(bulbOn_rawIMG)
+bulb_img_size = bulbOn_img.get_size()
+scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, SCALED_TOOL_SIZE)
+scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, SCALED_TOOL_SIZE)
+
+
+# Fan Images
+fanOn_img = pygame.image.load('resources/images/fan_on.gif')
+fanOff_img = pygame.image.load('resources/images/fan_off.png')
+fan_img_size = fanOn_img.get_size()
+scaled_fanOn_img = pygame.transform.scale(fanOn_img, SCALED_TOOL_SIZE)
+scaled_fanOff_img = pygame.transform.scale(fanOff_img, SCALED_TOOL_SIZE)
+
+
+#Highlight Image
+highlight_img = pygame.image.load('resources/images/highlight.png')
+hightlight_img_size = highlight_img.get_size()
+scaled_highlight_img = pygame.transform.scale(highlight_img, SCALED_TOOL_SIZE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Main game loop
 while True:
-
-
-
-
-
-
-    # Generating Images
-
-
-    #Bulb Images
-    bulbOn_rawIMG = 'resources/images/bulb_on.png'
-    bulbOff_rawIMG = 'resources/images/bulb_off.png'
-
-
-
-    
-
-
 
 
     # Handle events
@@ -157,8 +205,7 @@ while True:
             menu_btn_x = menu_btn_open_x
     
 
-    if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+SCALED_TOOL_SIZE[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + SCALED_TOOL_SIZE[1])), mouse_pos):
-        bulbOff_rawIMG = 'resources/images/bulb_on_highlighted.png'
+    
 
     
 
@@ -171,32 +218,7 @@ while True:
 
 
 
-    # Importing Images
-
-
-    # Battery Images
-    battery_img = pygame.image.load('resources/images/battery.png')
-    battery_img_size = battery_img.get_size()
-    scaled_battery_img = pygame.transform.scale(battery_img, (battery_img_size[0]*0.08, battery_img_size[1]*0.08))
-
-
-    # Bulb Images
-    
-    bulbOn_img = pygame.image.load(bulbOn_rawIMG)
-    bulbOff_img = pygame.image.load(bulbOn_rawIMG)
-    bulb_img_size = bulbOn_img.get_size()
-    scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, SCALED_TOOL_SIZE)
-    scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, SCALED_TOOL_SIZE)
-
-
-    # Fan Images
-    fanOn_img = pygame.image.load('resources/images/fan_on.gif')
-    fanOff_img = pygame.image.load('resources/images/fan_off.png')
-    fan_img_size = fanOn_img.get_size()
-    scaled_fanOn_img = pygame.transform.scale(fanOn_img, SCALED_TOOL_SIZE)
-    scaled_fanOff_img = pygame.transform.scale(fanOff_img, SCALED_TOOL_SIZE)
-
-
+   
 
 
 
@@ -224,7 +246,12 @@ while True:
 
         # Draw Tools on Tab
         window.blit(scaled_bulbOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
-        window.blit(scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2))
+        
+        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+SCALED_TOOL_SIZE[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + SCALED_TOOL_SIZE[1])), mouse_pos):
+            window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
+
+
+        window.blit(scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
 
 
     else:
@@ -237,7 +264,7 @@ while True:
     pygame.display.update()
 
     # Cap the frame rate
-    pygame.time.Clock().tick(5)
+    pygame.time.Clock().tick(30)
 
 
 
