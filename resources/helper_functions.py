@@ -58,9 +58,8 @@ def display_the_linked_list(linked_list):
 
 
 def last_element(linked_list):
-    current_ID = linked_list["Head"]
-    lst = ["Head"]
+    current_ID = linked_list["PS1"]
     while current_ID[2] != None:
         current_ID = linked_list[current_ID[2]]
-    return linked_list[current_ID[1]]
+    return current_ID[1]
         

@@ -2,7 +2,7 @@ import pygame
 import sys
 from resources.helper_functions import *
 import random 
-
+import time
 
 
 
@@ -67,7 +67,7 @@ def is_clicked(rect_tuple, mouse_pos, mouse): # from ((x,y),(x,y))
 pygame.init()
 
 # Set up the window
-window = pygame.display.set_mode()
+window = pygame.display.set_mode((1366,768))
 
 WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
 
@@ -107,8 +107,8 @@ highlight_img = pygame.image.load('resources/images/highlight.png')
 circuit = create_a_linkedlist()
 
 # Initiating the Battery
-form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, battery_img), next_ID2=None)
-form_connection(circuit, "NS1", pre_ID1=None, data=True, next_ID2=None)
+form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, 'resources/images/battery.png'), next_ID2=None)
+form_connection(circuit, "NS1", pre_ID1=None, data=None, next_ID2=None)
 
 
 # Set up colors
@@ -127,11 +127,13 @@ MENU_BUTTON_SIZE = 9600
 TOOLS_BUTTON_SIZE = 5000
 SCALED_GUI_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 BUTTON_SCALED_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
-scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 2831*WINDOW_WIDTH//20000)
-scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+#scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 2831*WINDOW_WIDTH//20000)
+scaled_battery_size = (131.136, 193.3573)
+scaled_tool_size = (131.136, 131.136)
 y_highlighted = 385*WINDOW_WIDTH//TOOLS_BUTTON_SIZE
 
 menu_scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+
 point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 
 
@@ -169,6 +171,8 @@ menu_open = False
 
 # Main game loop
 while True:
+
+
 
 
     # Handle events
@@ -280,7 +284,7 @@ while True:
 
 
 
-    # Draw Zoom In and Zoom Out
+    #Draw Zoom In and Zoom Out
     window.blit(scaled_ZoomIn_img, (WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9))
     ZoomIn_size = scaled_ZoomIn_img.get_size()
     if is_hovering(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos):
@@ -302,8 +306,10 @@ while True:
 
 
     # Draw batteries
-    window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
+    # window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
 
+
+    print(circuit)
 
 
 
@@ -324,10 +330,16 @@ while True:
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
-            count = random.randint(1, 500)
-            while "B" + str(count) in circuit.keys():
-                count = random.randint(1, 500)    
-            add_connection(circuit, "PS1", 'B'+str(count), False)
+
+
+            if 'B1' not in circuit:
+                add_connection(circuit, "PS1", 'B1', (last_element(circuit)[0]+100-131, last_element(circuit)[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
+            else:
+                count = random.randint(1, 500)
+                while "B" + str(count) in circuit.keys():
+                    count = random.randint(2, 500)    
+                add_connection(circuit, "PS1", 'B'+str(count), (last_element(circuit)[0]+100-131, last_element(circuit)[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
+            time.sleep(0.5)
 
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
@@ -347,7 +359,11 @@ while True:
 
 
 
-
+    for i in circuit:
+        if circuit[i][1] != None:
+            img = pygame.image.load(circuit[i][1][2])
+            scaled_img = pygame.transform.scale(img, (131,131))
+            window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
 
 
     # Update the display
