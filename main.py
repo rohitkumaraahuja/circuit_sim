@@ -1,6 +1,7 @@
 import pygame
 import sys
 from resources.helper_functions import *
+import random 
 
 
 
@@ -74,8 +75,40 @@ WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
 pygame.display.set_caption("Basic Pygame Example")
 
 
+
+
+
+
+
+
+# Importing Images
+zoomIn_img = pygame.image.load('resources/images/zoom-in.png')
+zoomOut_img = pygame.image.load('resources/images/zoom-out.png')
+
+battery_img = pygame.image.load('resources/images/battery.png')
+highlighted_battery_img = pygame.image.load('resources/images/highlighted_battery.png')
+
+bulbOn_rawIMG = 'resources/images/bulb_on.png'
+bulbOff_rawIMG = 'resources/images/bulb_off.png'
+bulbOn_img = pygame.image.load(bulbOn_rawIMG)
+bulbOff_img = pygame.image.load(bulbOn_rawIMG)
+
+fanOn_img = pygame.image.load('resources/images/fan_on.gif')
+fanOff_img = pygame.image.load('resources/images/fan_off.png')
+
+highlight_img = pygame.image.load('resources/images/highlight.png')
+
+
+
+
+
+
 #Creating Linked list
-circuit = create_a_linkedlist
+circuit = create_a_linkedlist()
+
+# Initiating the Battery
+form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, battery_img), next_ID2=None)
+form_connection(circuit, "NS1", pre_ID1=None, data=True, next_ID2=None)
 
 
 # Set up colors
@@ -94,7 +127,7 @@ MENU_BUTTON_SIZE = 9600
 TOOLS_BUTTON_SIZE = 5000
 SCALED_GUI_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 BUTTON_SCALED_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
-scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 1507*WINDOW_WIDTH//20000)
+scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 2831*WINDOW_WIDTH//20000)
 scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 y_highlighted = 385*WINDOW_WIDTH//TOOLS_BUTTON_SIZE
 
@@ -192,23 +225,20 @@ while True:
     # Importing Images
             
     # Zoom In and Out
-    zoomIn_img = pygame.image.load('resources/images/zoom-in.png')
+    
     scaled_ZoomIn_img = pygame.transform.scale(zoomIn_img, SCALED_GUI_SIZE)
-    zoomOut_img = pygame.image.load('resources/images/zoom-out.png')
     scaled_ZoomOut_img = pygame.transform.scale(zoomOut_img, SCALED_GUI_SIZE)
 
 
     # Battery Images
-    battery_img = pygame.image.load('resources/images/battery.png')
+    
     scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size)
+    highlighted_scaled_battery_img = pygame.transform.scale(highlighted_battery_img, scaled_battery_size)
 
 
     # Bulb Images
 
-    bulbOn_rawIMG = 'resources/images/bulb_on.png'
-    bulbOff_rawIMG = 'resources/images/bulb_off.png'
-    bulbOn_img = pygame.image.load(bulbOn_rawIMG)
-    bulbOff_img = pygame.image.load(bulbOn_rawIMG)
+    
     scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, scaled_tool_size)
     scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, scaled_tool_size)
     menu_scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, menu_scaled_tool_size)
@@ -216,9 +246,7 @@ while True:
 
 
     # Fan Images
-    fanOn_img = pygame.image.load('resources/images/fan_on.gif')
-    fanOff_img = pygame.image.load('resources/images/fan_off.png')
-    fan_img_size = fanOn_img.get_size()
+    
     scaled_fanOn_img = pygame.transform.scale(fanOn_img, scaled_tool_size)
     scaled_fanOff_img = pygame.transform.scale(fanOff_img, scaled_tool_size)
     menu_scaled_fanOn_img = pygame.transform.scale(fanOn_img, menu_scaled_tool_size)
@@ -227,8 +255,6 @@ while True:
 
 
     #Highlight Image
-    highlight_img = pygame.image.load('resources/images/highlight.png')
-    hightlight_img_size = highlight_img.get_size()
     scaled_highlight_img = pygame.transform.scale(highlight_img, menu_scaled_tool_size)
     point_scaled_highlight_img = pygame.transform.scale(highlight_img, point_scaled_tool_size)
     button_highlight_img = pygame.transform.scale(highlight_img, BUTTON_SCALED_SIZE)
@@ -298,13 +324,14 @@ while True:
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
+            count = random.randint(1, 500)
+            add_connection(circuit, "PS1", 'B'+str(count), False)
 
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
-        print(scaled_tool_size)
-        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
-            window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2))
-        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos,mouse):
+        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
+            window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
+        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
 
     else:
@@ -314,7 +341,7 @@ while True:
 
 
     if clicked:
-        window.blit(point_scaled_highlight_img, (WINDOW_WIDTH*0.86,WINDOW_HEIGHT*0.58))
+        window.blit(highlighted_scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
 
 
 
