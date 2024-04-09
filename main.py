@@ -96,6 +96,8 @@ SCALED_GUI_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_
 BUTTON_SCALED_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 1507*WINDOW_WIDTH//20000)
 scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+y_highlighted = 385*WINDOW_WIDTH//TOOLS_BUTTON_SIZE
+
 menu_scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 
@@ -198,7 +200,7 @@ while True:
 
     # Battery Images
     battery_img = pygame.image.load('resources/images/battery.png')
-    scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size )
+    scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size)
 
 
     # Bulb Images
@@ -227,9 +229,10 @@ while True:
     #Highlight Image
     highlight_img = pygame.image.load('resources/images/highlight.png')
     hightlight_img_size = highlight_img.get_size()
-    scaled_highlight_img = pygame.transform.scale(highlight_img, scaled_tool_size)
+    scaled_highlight_img = pygame.transform.scale(highlight_img, menu_scaled_tool_size)
     point_scaled_highlight_img = pygame.transform.scale(highlight_img, point_scaled_tool_size)
     button_highlight_img = pygame.transform.scale(highlight_img, BUTTON_SCALED_SIZE)
+    
         
 
     
@@ -272,7 +275,7 @@ while True:
 
 
 
-    # Draw battary
+    # Draw batteries
     window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
 
 
@@ -291,9 +294,9 @@ while True:
         
         window.blit(menu_scaled_bulbOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         
-        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + scaled_tool_size[1])), mouse_pos):
+        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos):
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
-        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + scaled_tool_size[1])), mouse_pos,mouse):
+        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
 
 

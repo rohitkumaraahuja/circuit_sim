@@ -43,9 +43,17 @@ def remove_a_receiver(linked_list,R_ID):
 
 def display_the_linked_list(linked_list):
     current_ID = linked_list["Head"]
-    lst = [["Head"]]
+    lst = ["Head"]
     while current_ID[2] != None:
         current_ID = linked_list[current_ID[2]]
         lst.append(current_ID)
     return lst
+
+
+def last_element(linked_list):
+    current_ID = linked_list["Head"]
+    lst = ["Head"]
+    while current_ID[2] != None:
+        current_ID = linked_list[current_ID[2]]
+    return linked_list[current_ID[1]]
         
