@@ -92,7 +92,17 @@ tools = 5
 rect_speed = 5
 MENU_BUTTON_SIZE = 9600
 TOOLS_BUTTON_SIZE = 5000
-SCALED_TOOL_SIZE = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+SCALED_GUI_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+BUTTON_SCALED_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 1507*WINDOW_WIDTH//20000)
+scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+menu_scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
+
+
+
+#Function Constant
+clicked = False
 
 
 
@@ -108,61 +118,6 @@ menu_btn_y = WINDOW_HEIGHT*0.1
 menu_btn_close_x = WINDOW_WIDTH*0.01
 menu_btn_open_x = WINDOW_WIDTH*0.15
 menu_open = False
-
-
-
-
-
-
-
-
-
-
-# Importing Images
-
-
-# Battery Images
-battery_img = pygame.image.load('resources/images/battery.png')
-battery_img_size = battery_img.get_size()
-scaled_battery_img = pygame.transform.scale(battery_img, (battery_img_size[0]*0.08, battery_img_size[1]*0.08))
-
-
-# Bulb Images
-
-bulbOn_rawIMG = 'resources/images/bulb_on.png'
-bulbOff_rawIMG = 'resources/images/bulb_off.png'
-bulbOn_img = pygame.image.load(bulbOn_rawIMG)
-bulbOff_img = pygame.image.load(bulbOn_rawIMG)
-bulb_img_size = bulbOn_img.get_size()
-scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, SCALED_TOOL_SIZE)
-scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, SCALED_TOOL_SIZE)
-
-
-# Fan Images
-fanOn_img = pygame.image.load('resources/images/fan_on.gif')
-fanOff_img = pygame.image.load('resources/images/fan_off.png')
-fan_img_size = fanOn_img.get_size()
-scaled_fanOn_img = pygame.transform.scale(fanOn_img, SCALED_TOOL_SIZE)
-scaled_fanOff_img = pygame.transform.scale(fanOff_img, SCALED_TOOL_SIZE)
-
-
-#Highlight Image
-highlight_img = pygame.image.load('resources/images/highlight.png')
-hightlight_img_size = highlight_img.get_size()
-scaled_highlight_img = pygame.transform.scale(highlight_img, SCALED_TOOL_SIZE)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -205,7 +160,77 @@ while True:
             menu_btn_x = menu_btn_open_x
     
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # Importing Images
+            
+    # Zoom In and Out
+    zoomIn_img = pygame.image.load('resources/images/zoom-in.png')
+    scaled_ZoomIn_img = pygame.transform.scale(zoomIn_img, SCALED_GUI_SIZE)
+    zoomOut_img = pygame.image.load('resources/images/zoom-out.png')
+    scaled_ZoomOut_img = pygame.transform.scale(zoomOut_img, SCALED_GUI_SIZE)
+
+
+    # Battery Images
+    battery_img = pygame.image.load('resources/images/battery.png')
+    scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size )
+
+
+    # Bulb Images
+
+    bulbOn_rawIMG = 'resources/images/bulb_on.png'
+    bulbOff_rawIMG = 'resources/images/bulb_off.png'
+    bulbOn_img = pygame.image.load(bulbOn_rawIMG)
+    bulbOff_img = pygame.image.load(bulbOn_rawIMG)
+    scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, scaled_tool_size)
+    scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, scaled_tool_size)
+    menu_scaled_bulbOn_img = pygame.transform.scale(bulbOn_img, menu_scaled_tool_size)
+    menu_scaled_bulbOff_img = pygame.transform.scale(bulbOff_img, menu_scaled_tool_size)
+
+
+    # Fan Images
+    fanOn_img = pygame.image.load('resources/images/fan_on.gif')
+    fanOff_img = pygame.image.load('resources/images/fan_off.png')
+    fan_img_size = fanOn_img.get_size()
+    scaled_fanOn_img = pygame.transform.scale(fanOn_img, scaled_tool_size)
+    scaled_fanOff_img = pygame.transform.scale(fanOff_img, scaled_tool_size)
+    menu_scaled_fanOn_img = pygame.transform.scale(fanOn_img, menu_scaled_tool_size)
+    menu_scaled_fanOff_img = pygame.transform.scale(fanOff_img, menu_scaled_tool_size)
+
+
+
+    #Highlight Image
+    highlight_img = pygame.image.load('resources/images/highlight.png')
+    hightlight_img_size = highlight_img.get_size()
+    scaled_highlight_img = pygame.transform.scale(highlight_img, scaled_tool_size)
+    point_scaled_highlight_img = pygame.transform.scale(highlight_img, point_scaled_tool_size)
+    button_highlight_img = pygame.transform.scale(highlight_img, BUTTON_SCALED_SIZE)
+        
 
     
 
@@ -226,7 +251,24 @@ while True:
 
 
 
+    # Draw Zoom In and Zoom Out
+    window.blit(scaled_ZoomIn_img, (WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9))
+    ZoomIn_size = scaled_ZoomIn_img.get_size()
+    if is_hovering(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos):
+        window.blit(button_highlight_img, (WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9))
+    if is_clicked(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos, mouse):
+        scaled_battery_size = (scaled_battery_size[0]*1.5,scaled_battery_size[1]*1.5)
+        scaled_tool_size = (scaled_tool_size[0]*1.5,scaled_tool_size[1]*1.5)
+        point_scaled_tool_size = (point_scaled_tool_size[0]*1.5,point_scaled_tool_size[1]*1.5)
 
+    window.blit(scaled_ZoomOut_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
+    ZoomOut_size = scaled_ZoomOut_img.get_size()
+    if is_hovering(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos):
+        window.blit(button_highlight_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
+    if is_clicked(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos, mouse):
+        scaled_battery_size = (scaled_battery_size[0]/1.5,scaled_battery_size[1]/1.5)
+        scaled_tool_size = (scaled_tool_size[0]/1.5,scaled_tool_size[1]/1.5)
+        point_scaled_tool_size = (point_scaled_tool_size[0]/1.5,point_scaled_tool_size[1]/1.5)
 
 
 
@@ -237,7 +279,7 @@ while True:
 
 
 
-
+    
 
     # Draw the side element tab
     if menu_open:
@@ -245,18 +287,30 @@ while True:
         window.blit(scaled_menuIcon_img, (menu_btn_x, menu_btn_y))
 
         # Draw Tools on Tab
-        window.blit(scaled_bulbOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
+
         
-        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+SCALED_TOOL_SIZE[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + SCALED_TOOL_SIZE[1])), mouse_pos):
+        window.blit(menu_scaled_bulbOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
+        
+        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + scaled_tool_size[1])), mouse_pos):
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
+        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + scaled_tool_size[1])), mouse_pos,mouse):
+            clicked = True
 
 
-        window.blit(scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
+        window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
 
 
     else:
         pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.06, WINDOW_HEIGHT), border_top_right_radius = 50)
         window.blit(scaled_menuIcon_img, (menu_btn_close_x, menu_btn_y))
+
+
+
+    if clicked:
+        window.blit(point_scaled_highlight_img, (WINDOW_WIDTH*0.86,WINDOW_HEIGHT*0.58))
+
+
+
 
 
 
