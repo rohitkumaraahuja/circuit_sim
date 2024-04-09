@@ -325,6 +325,8 @@ while True:
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
             count = random.randint(1, 500)
+            while "B" + str(count) in circuit.keys():
+                count = random.randint(1, 500)    
             add_connection(circuit, "PS1", 'B'+str(count), False)
 
 
