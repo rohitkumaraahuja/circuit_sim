@@ -298,7 +298,11 @@ while True:
 
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
-
+        print(scaled_tool_size)
+        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
+            window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2))
+        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos,mouse):
+            clicked = True
 
     else:
         pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.06, WINDOW_HEIGHT), border_top_right_radius = 50)
