@@ -140,6 +140,7 @@ point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH/
 
 #Function Constant
 clicked = False
+component = ''
 
 
 
@@ -330,16 +331,7 @@ while True:
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
-
-
-            if 'B1' not in circuit:
-                add_connection(circuit, "PS1", 'B1', (last_element(circuit)[0]+100-131, last_element(circuit)[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
-            else:
-                count = random.randint(1, 500)
-                while "B" + str(count) in circuit.keys():
-                    count = random.randint(2, 500)    
-                add_connection(circuit, "PS1", 'B'+str(count), (last_element(circuit)[0]+100-131, last_element(circuit)[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
-            time.sleep(0.5)
+            component = 'bulb'
 
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
@@ -356,11 +348,27 @@ while True:
 
     if clicked:
         window.blit(highlighted_scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
+        if is_clicked(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.6),(WINDOW_WIDTH*0.87,WINDOW_HEIGHT*0.63)), mouse_pos, mouse):
+            if component == 'bulb':
+                if 'B1' not in circuit:
+                    add_connection(circuit, "PS1", 'B1', (get_node_data(circuit, last_node_ID(circuit))[0]+100-131, get_node_data(circuit, last_node_ID(circuit))[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
+                else:
+                    count = random.randint(1, 500)
+                    while "B" + str(count) in circuit.keys():
+                        count = random.randint(2, 500)    
+                    add_connection(circuit, last_node_ID(circuit), 'B'+str(count), (get_node_data(circuit, last_node_ID(circuit))[0]-131, get_node_data(circuit, last_node_ID(circuit))[1], 'resources/images/bulb_off_withWire.png'))
+                component = ''
+                time.sleep(0.5)
 
 
 
     for i in circuit:
-        if circuit[i][1] != None:
+        if i[:2] == 'PS':
+            img = pygame.image.load(circuit[i][1][2])
+            scaled_img = pygame.transform.scale(img, (131,193))
+            window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
+
+        elif circuit[i][1] != None:
             img = pygame.image.load(circuit[i][1][2])
             scaled_img = pygame.transform.scale(img, (131,131))
             window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))

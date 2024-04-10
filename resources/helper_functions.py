@@ -15,8 +15,8 @@ def remove_connection(linked_list, ID): # Removes connections of the whole circu
             linked_list[current_ID][1] = False
             current_ID = next_ID
 
-def get_a_node(linked_list, ID): # Returns data of a particular component with key ID:
-    return linked_list[ID]
+def get_node_data(linked_list, ID): # Returns data of a particular component with key ID:
+    return linked_list[ID][1]
 
 def add_connection(linked_list, ID, next_ID, next_data):
     current_ID = ID
@@ -57,9 +57,9 @@ def display_the_linked_list(linked_list):
     return lst
 
 
-def last_element(linked_list):
-    current_ID = linked_list["PS1"]
-    while current_ID[2] != None:
-        current_ID = linked_list[current_ID[2]]
-    return current_ID[1]
+def last_node_ID(linked_list):
+    current_ID = "PS1"
+    while linked_list[current_ID][2] != None:
+        current_ID = linked_list[current_ID][2]
+    return current_ID
         
