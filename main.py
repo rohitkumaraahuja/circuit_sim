@@ -67,9 +67,11 @@ def is_clicked(rect_tuple, mouse_pos, mouse): # from ((x,y),(x,y))
 pygame.init()
 
 # Set up the window
-window = pygame.display.set_mode((1366,768))
 
+window = pygame.display.set_mode((1366,768))
 WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
+
+
 
 
 pygame.display.set_caption("Basic Pygame Example")
@@ -127,9 +129,11 @@ MENU_BUTTON_SIZE = 9600
 TOOLS_BUTTON_SIZE = 5000
 SCALED_GUI_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 BUTTON_SCALED_SIZE = (200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 200*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
-#scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 2831*WINDOW_WIDTH//20000)
+# scaled_battery_size =  (1920*WINDOW_WIDTH//20000, 2831*WINDOW_WIDTH//20000)
 scaled_battery_size = (131.136, 193.3573)
+# scaled_tool_size = (1920*WINDOW_WIDTH//20000, 1920*WINDOW_WIDTH//20000)
 scaled_tool_size = (131.136, 131.136)
+
 y_highlighted = 385*WINDOW_WIDTH//TOOLS_BUTTON_SIZE
 
 menu_scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
@@ -310,7 +314,6 @@ while True:
     # window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
 
 
-    print(circuit)
 
 
 
