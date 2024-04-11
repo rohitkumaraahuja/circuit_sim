@@ -67,9 +67,9 @@ def is_clicked(rect_tuple, mouse_pos, mouse): # from ((x,y),(x,y))
 pygame.init()
 
 # Set up the window
-
-window = pygame.display.set_mode((1366,768))
-WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
+display_info = pygame.display.Info()
+WINDOW_WIDTH, WINDOW_HEIGHT = display_info.current_w, display_info.current_h
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
 
@@ -89,6 +89,7 @@ zoomOut_img = pygame.image.load('resources/images/zoom-out.png')
 
 battery_img = pygame.image.load('resources/images/battery.png')
 highlighted_battery_img = pygame.image.load('resources/images/highlighted_battery.png')
+wired_battery = pygame.image.load("resources/images/wired_battery.png")
 
 bulbOn_rawIMG = 'resources/images/bulb_on.png'
 bulbOff_rawIMG = 'resources/images/bulb_off.png'
@@ -145,6 +146,7 @@ point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH/
 #Function Constant
 clicked = False
 component = ''
+connection = False
 
 
 
@@ -243,6 +245,7 @@ while True:
     
     scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size)
     highlighted_scaled_battery_img = pygame.transform.scale(highlighted_battery_img, scaled_battery_size)
+    wired_scaled_battery_img = pygame.transform.scale(wired_battery, scaled_battery_size)
 
 
     # Bulb Images
@@ -295,23 +298,28 @@ while True:
     if is_hovering(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos):
         window.blit(button_highlight_img, (WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9))
     if is_clicked(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos, mouse):
-        scaled_battery_size = (scaled_battery_size[0]*1.5,scaled_battery_size[1]*1.5)
-        scaled_tool_size = (scaled_tool_size[0]*1.5,scaled_tool_size[1]*1.5)
-        point_scaled_tool_size = (point_scaled_tool_size[0]*1.5,point_scaled_tool_size[1]*1.5)
+        if scaled_battery_size[0] < 150:
+            scaled_battery_size = (scaled_battery_size[0]*1.5,scaled_battery_size[1]*1.5)
+            scaled_tool_size = (scaled_tool_size[0]*1.5,scaled_tool_size[1]*1.5)
+            point_scaled_tool_size = (point_scaled_tool_size[0]*1.5,point_scaled_tool_size[1]*1.5)
+            
 
     window.blit(scaled_ZoomOut_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
     ZoomOut_size = scaled_ZoomOut_img.get_size()
     if is_hovering(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos):
         window.blit(button_highlight_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
     if is_clicked(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos, mouse):
-        scaled_battery_size = (scaled_battery_size[0]/1.5,scaled_battery_size[1]/1.5)
-        scaled_tool_size = (scaled_tool_size[0]/1.5,scaled_tool_size[1]/1.5)
-        point_scaled_tool_size = (point_scaled_tool_size[0]/1.5,point_scaled_tool_size[1]/1.5)
-
+        if scaled_battery_size[0] > 100 and scaled_battery_size[1] > 150:
+            scaled_battery_size = (scaled_battery_size[0]/1.5,scaled_battery_size[1]/1.5)
+            scaled_tool_size = (scaled_tool_size[0]/1.5,scaled_tool_size[1]/1.5)
+            point_scaled_tool_size = (point_scaled_tool_size[0]/1.5,point_scaled_tool_size[1]/1.5)
+            
+    # If the zoom button is pressed, the old battery gets removed and new battery with its
+    # new dimentions is made 
 
 
     # Draw batteries
-    # window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
+    window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
 
 
 
@@ -335,7 +343,7 @@ while True:
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
             clicked = True
             component = 'bulb'
-
+        
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
         if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
@@ -351,37 +359,38 @@ while True:
 
     if clicked:
         window.blit(highlighted_scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
-        if is_clicked(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.6),(WINDOW_WIDTH*0.87,WINDOW_HEIGHT*0.63)), mouse_pos, mouse):
+        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.87,WINDOW_HEIGHT*0.63)), mouse_pos, mouse):
             if component == 'bulb':
                 if 'B1' not in circuit:
-                    add_connection(circuit, "PS1", 'B1', (get_node_data(circuit, last_node_ID(circuit))[0]+100-131, get_node_data(circuit, last_node_ID(circuit))[1]+13.5-104, 'resources/images/bulb_off_withWire.png'))
+                    add_connection(circuit, "PS1", 'B1', (get_node_data(circuit, last_node_ID(circuit))[0]+100-131, get_node_data(circuit, last_node_ID(circuit))[1]+13.5-104, 'resources/images/highlighted_bulb_off_withWire.png'))
                 else:
                     count = random.randint(1, 500)
                     while "B" + str(count) in circuit.keys():
                         count = random.randint(2, 500)    
-                    add_connection(circuit, last_node_ID(circuit), 'B'+str(count), (get_node_data(circuit, last_node_ID(circuit))[0]-131, get_node_data(circuit, last_node_ID(circuit))[1], 'resources/images/bulb_off_withWire.png'))
+                    add_connection(circuit, last_node_ID(circuit), 'B'+str(count), (get_node_data(circuit, last_node_ID(circuit))[0]-131, get_node_data(circuit, last_node_ID(circuit))[1], 'resources/images/highlighted_bulb_off_withWire.png'))
                 component = ''
                 time.sleep(0.5)
 
-
-
     for i in circuit:
-        if i[:2] == 'PS':
-            img = pygame.image.load(circuit[i][1][2])
-            scaled_img = pygame.transform.scale(img, (131,193))
-            window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
-
-        elif circuit[i][1] != None:
-            img = pygame.image.load(circuit[i][1][2])
-            scaled_img = pygame.transform.scale(img, (131,131))
-            window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
-
+        if circuit[i][1] != None:
+            img = circuit[i][1][2]
+            if "highlighted" and "bulb" in img: 
+                if i[:2] == 'PS':
+                    window.blit(wired_battery, )
+                    img = pygame.image.load("resources/images/highlighted_bulb_off_withWire.png")
+                    scaled_img = pygame.transform.scale(img, (131,193))
+                    window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
+                else:
+                    img = pygame.image.load("resources/images/bulb_off_withWire.png")
+                    scaled_img = pygame.transform.scale(img, (131,131))
+                    window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
 
     # Update the display
     pygame.display.update()
 
     # Cap the frame rate
     pygame.time.Clock().tick(30)
+    print(circuit)
 
 
 
