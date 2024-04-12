@@ -121,7 +121,7 @@ highlight_img = pygame.image.load('resources/images/highlight.png')
 
 
 circuit = {
-    'PS1': (None, (350, 350, 'resources/images/on_0_ps_img.png'), None)
+    'PS1': (None, (700, 350, 'resources/images/on_0_ps_img.png'), None)
 }
 
 
