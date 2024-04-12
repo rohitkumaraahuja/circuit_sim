@@ -139,7 +139,7 @@ GRID_COLOR = (180,180,180)
 
 
 bulb_image = pygame.image.load('resources/images/off_180_b_img.png')
-sacled_bulb_image = pygame.transform.scale(bulb_image, (140, 140))
+scaled_bulb_image = pygame.transform.scale(bulb_image, (140, 140))
 
 # Initiating the Battery
 # form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, 'resources/images/battery.png'), next_ID2=None)
@@ -437,7 +437,6 @@ while True:
                                 break
                     if i[0] == 'P':
                         if circuit[i][1][2][20] == '0':
-                            print()
                             if circuit[i][1][0]+140 == init_mouse_pos[0] and circuit[i][1][1]+70 == init_mouse_pos[1]:
                                 circuit[i] = (circuit[i][0], circuit[i][1], id)
                                 start = i
@@ -548,7 +547,7 @@ while True:
     if component_selected:
         create_line = False
         if component == 'bulb':
-            window.blit(sacled_bulb_image, (near_division_multiple(division, mouse_pos[0]-70), near_division_multiple(division, mouse_pos[1]-70)))
+            window.blit(scaled_bulb_image, (near_division_multiple(division, mouse_pos[0]-70), near_division_multiple(division, mouse_pos[1]-70)))
         
 
    
@@ -628,10 +627,8 @@ while True:
 
 
     
+
     print(circuit)
-    print()
-
-
 
 
     # Update the display
