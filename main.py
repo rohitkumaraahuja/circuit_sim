@@ -464,7 +464,7 @@ while True:
                                 end = i
                                 break
                     if i[0] == 'L':
-                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][2] == line_ending_point[1]:
+                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1] == line_ending_point[1]:
                             circuit[i] = (id, circuit[i][1], circuit[i][2])
                             end = i
                             break
@@ -636,11 +636,3 @@ while True:
 
     # Cap the frame rate
     pygame.time.Clock().tick(30)
-
-
-
-
-
-
-
-
