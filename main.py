@@ -38,7 +38,16 @@ def is_clicked(rect_tuple, mouse_pos, mouse): # from ((x,y),(x,y))
     return False
         
 
-
+def near_division_multiple(division, number):
+    a = number
+    if a%division >= division//2:
+        while a%division != 0:
+            a+=1
+        return a
+    else:
+        while a%division != 0:
+            a-=1
+        return a
 
 
 
@@ -67,9 +76,9 @@ def is_clicked(rect_tuple, mouse_pos, mouse): # from ((x,y),(x,y))
 pygame.init()
 
 # Set up the window
-display_info = pygame.display.Info()
-WINDOW_WIDTH, WINDOW_HEIGHT = display_info.current_w, display_info.current_h
-window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+window = pygame.display.set_mode()
+WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
 
 
 
@@ -89,7 +98,6 @@ zoomOut_img = pygame.image.load('resources/images/zoom-out.png')
 
 battery_img = pygame.image.load('resources/images/battery.png')
 highlighted_battery_img = pygame.image.load('resources/images/highlighted_battery.png')
-wired_battery = pygame.image.load("resources/images/wired_battery.png")
 
 bulbOn_rawIMG = 'resources/images/bulb_on.png'
 bulbOff_rawIMG = 'resources/images/bulb_off.png'
@@ -107,11 +115,35 @@ highlight_img = pygame.image.load('resources/images/highlight.png')
 
 
 #Creating Linked list
-circuit = create_a_linkedlist()
+
+
+
+
+
+circuit = {
+    'PS1': ('NS1', (700, 700, 'resources/images/on_0_ps_img.png'), None)
+}
+
+
+#Function Constant
+component_selected = False
+component = ''
+init_mouse_pos = (0,0)
+line_ending_point = (0,0)
+division = 70
+create_line = False
+WIRE_COLOR = (0,0,0)
+GRID_COLOR = (180,180,180)
+
+
+
+
+bulb_image = pygame.image.load('resources/images/off_180_b_img.png')
+sacled_bulb_image = pygame.transform.scale(bulb_image, (140, 140))
 
 # Initiating the Battery
-form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, 'resources/images/battery.png'), next_ID2=None)
-form_connection(circuit, "NS1", pre_ID1=None, data=None, next_ID2=None)
+# form_connection(circuit, "PS1", pre_ID1=None, data=(WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6, 'resources/images/battery.png'), next_ID2=None)
+# form_connection(circuit, "NS1", pre_ID1=None, data=None, next_ID2=None)
 
 
 # Set up colors
@@ -143,10 +175,7 @@ point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH/
 
 
 
-#Function Constant
-clicked = False
-component = ''
-connection = False
+
 
 
 
@@ -245,7 +274,6 @@ while True:
     
     scaled_battery_img = pygame.transform.scale(battery_img, scaled_battery_size)
     highlighted_scaled_battery_img = pygame.transform.scale(highlighted_battery_img, scaled_battery_size)
-    wired_scaled_battery_img = pygame.transform.scale(wired_battery, scaled_battery_size)
 
 
     # Bulb Images
@@ -282,8 +310,16 @@ while True:
 
 
 
-
-
+    # Draw Grid
+    temp325 = 1
+    while division*temp325 <= WINDOW_WIDTH:
+        pygame.draw.line(window, GRID_COLOR, 
+                [division*temp325, 0], 
+                [division*temp325, WINDOW_HEIGHT], 5)
+        pygame.draw.line(window, GRID_COLOR, 
+                [0, division*temp325], 
+                [WINDOW_WIDTH, division*temp325], 5)
+        temp325 += 1
    
 
 
@@ -298,28 +334,166 @@ while True:
     if is_hovering(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos):
         window.blit(button_highlight_img, (WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9))
     if is_clicked(((WINDOW_WIDTH*0.85,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.85+ZoomIn_size[0],WINDOW_HEIGHT*0.9+ZoomIn_size[1] )) ,mouse_pos, mouse):
-        if scaled_battery_size[0] < 150:
-            scaled_battery_size = (scaled_battery_size[0]*1.5,scaled_battery_size[1]*1.5)
-            scaled_tool_size = (scaled_tool_size[0]*1.5,scaled_tool_size[1]*1.5)
-            point_scaled_tool_size = (point_scaled_tool_size[0]*1.5,point_scaled_tool_size[1]*1.5)
-            
+        scaled_battery_size = (scaled_battery_size[0]*1.5,scaled_battery_size[1]*1.5)
+        scaled_tool_size = (scaled_tool_size[0]*1.5,scaled_tool_size[1]*1.5)
+        point_scaled_tool_size = (point_scaled_tool_size[0]*1.5,point_scaled_tool_size[1]*1.5)
 
     window.blit(scaled_ZoomOut_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
     ZoomOut_size = scaled_ZoomOut_img.get_size()
     if is_hovering(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos):
         window.blit(button_highlight_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9))
     if is_clicked(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.9),(WINDOW_WIDTH*0.9+ZoomOut_size[0],WINDOW_HEIGHT*0.9+ZoomOut_size[1] )) ,mouse_pos, mouse):
-        if scaled_battery_size[0] > 100 and scaled_battery_size[1] > 150:
-            scaled_battery_size = (scaled_battery_size[0]/1.5,scaled_battery_size[1]/1.5)
-            scaled_tool_size = (scaled_tool_size[0]/1.5,scaled_tool_size[1]/1.5)
-            point_scaled_tool_size = (point_scaled_tool_size[0]/1.5,point_scaled_tool_size[1]/1.5)
-            
-    # If the zoom button is pressed, the old battery gets removed and new battery with its
-    # new dimentions is made 
+        scaled_battery_size = (scaled_battery_size[0]/1.5,scaled_battery_size[1]/1.5)
+        scaled_tool_size = (scaled_tool_size[0]/1.5,scaled_tool_size[1]/1.5)
+        point_scaled_tool_size = (point_scaled_tool_size[0]/1.5,point_scaled_tool_size[1]/1.5)
 
 
-    # Draw batteries
-    window.blit(scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
+
+
+
+
+
+
+
+
+
+# Draw Wire
+    if menu_open:
+        if is_clicked(((WINDOW_WIDTH*0.2, 0), (WINDOW_WIDTH, WINDOW_HEIGHT)), mouse_pos, mouse) and component_selected == False:
+            if create_line:
+                id = random.randint(2,10000)
+                while "L" + str(id) in circuit:
+                    id = random.randint(2, 10000)
+                id = 'L'+str(id)
+                
+
+                # For Tail
+                start = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0]+140 == init_mouse_pos[0] and circuit[i][1][1]+70 == init_mouse_pos[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][20] == '0':
+                            print()
+                            if circuit[i][1][0]+140 == init_mouse_pos[0] and circuit[i][1][1]+70 == init_mouse_pos[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][2] == init_mouse_pos[0] and circuit[i][1][3] == init_mouse_pos[1]:
+                            circuit[i] = (circuit[i][0], circuit[i][1], id)
+                            start = i
+                            break
+                
+
+                # For Head
+                end = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1]+70 == line_ending_point[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][20] == '0':
+                            if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1]+70 == line_ending_point[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][2] == line_ending_point[1]:
+                            circuit[i] = (id, circuit[i][1], circuit[i][2])
+                            end = i
+                            break
+                
+                circuit[id] = (start, (init_mouse_pos[0], init_mouse_pos[1], line_ending_point[0], line_ending_point[1]), end)
+
+
+            create_line = not create_line
+            init_mouse_pos = (near_division_multiple(division, mouse_pos[0]), near_division_multiple(division, mouse_pos[1]))
+            time.sleep(0.2)
+    else:
+        if is_clicked(((WINDOW_WIDTH*0.06, 0), (WINDOW_WIDTH, WINDOW_HEIGHT)), mouse_pos, mouse) and component_selected == False:
+            if create_line:
+                id = random.randint(2,10000)
+                while "L" + str(id) in circuit:
+                    id = random.randint(2, 10000)
+                id = 'L'+str(id)
+                
+
+                # For Tail
+                start = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0]+140 == init_mouse_pos[0] and circuit[i][1][1]+70 == init_mouse_pos[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][20] == '0':
+                            print()
+                            if circuit[i][1][0]+140 == init_mouse_pos[0] and circuit[i][1][1]+70 == init_mouse_pos[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][2] == init_mouse_pos[0] and circuit[i][1][3] == init_mouse_pos[1]:
+                            circuit[i] = (circuit[i][0], circuit[i][1], id)
+                            start = i
+                            break
+                
+
+                # For Head
+                end = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1]+70 == line_ending_point[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][20] == '0':
+                            if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1]+70 == line_ending_point[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][2] == line_ending_point[1]:
+                            circuit[i] = (id, circuit[i][1], circuit[i][2])
+                            end = i
+                            break
+                
+                circuit[id] = (start, (init_mouse_pos[0], init_mouse_pos[1], line_ending_point[0], line_ending_point[1]), end)
+
+            create_line = not create_line
+            init_mouse_pos = (near_division_multiple(division, mouse_pos[0]), near_division_multiple(division, mouse_pos[1]))
+            time.sleep(0.2)
+
+
+    if create_line:
+        line_ending_point = (near_division_multiple(division, mouse_pos[0]), near_division_multiple(division, mouse_pos[1]))
+        if abs(line_ending_point[0] - init_mouse_pos[0]) < abs(line_ending_point[1] - init_mouse_pos[1]):
+            line_ending_point = (init_mouse_pos[0], line_ending_point[1])
+        else:
+            line_ending_point = (line_ending_point[0], init_mouse_pos[1])
+        
+        pygame.draw.line(window, WIRE_COLOR, 
+                [init_mouse_pos[0], init_mouse_pos[1]], 
+                [line_ending_point[0], line_ending_point[1]], 5)
+
+
+
+
+
+
+
 
 
 
@@ -338,18 +512,21 @@ while True:
         
         window.blit(menu_scaled_bulbOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         
+        # Menu Bulb
         if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos):
             window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1))
         if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.05+menu_scaled_tool_size[0], (((WINDOW_HEIGHT-70)/(tools+1))*1) + menu_scaled_tool_size[1])), mouse_pos,mouse):
-            clicked = True
+            component_selected = True
             component = 'bulb'
-        
+            mouse = (False, mouse[1], mouse[2])
+            time.sleep(0.1)
+
 
         window.blit(menu_scaled_fanOn_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
-        if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
-            window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
-        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos,mouse):
-            clicked = True
+        # if is_hovering(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos):
+        #     window.blit(scaled_highlight_img, (WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT)/(tools+1))*2))
+        # if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*2),(WINDOW_WIDTH*0.05+scaled_tool_size[0], (((WINDOW_HEIGHT)/(tools+1))*2) + scaled_tool_size[1])), mouse_pos,mouse):
+        #     component_selected = True
 
     else:
         pygame.draw.rect(window, LIGHT_BLUE, (0, WINDOW_HEIGHT*0.05, WINDOW_WIDTH*0.06, WINDOW_HEIGHT), border_top_right_radius = 50)
@@ -357,40 +534,111 @@ while True:
 
 
 
-    if clicked:
-        window.blit(highlighted_scaled_battery_img, (WINDOW_WIDTH*0.8,WINDOW_HEIGHT*0.6))
-        if is_clicked(((WINDOW_WIDTH*0.05, ((WINDOW_HEIGHT-70)/(tools+1))*1),(WINDOW_WIDTH*0.87,WINDOW_HEIGHT*0.63)), mouse_pos, mouse):
+
+
+   
+        
+        
+
+        
+
+
+
+    # Draw Component
+    if component_selected:
+        create_line = False
+        if component == 'bulb':
+            window.blit(sacled_bulb_image, (near_division_multiple(division, mouse_pos[0]-70), near_division_multiple(division, mouse_pos[1]-70)))
+        
+
+   
+        if mouse[0] == True:
+            component_selected = False
+
             if component == 'bulb':
-                if 'B1' not in circuit:
-                    add_connection(circuit, "PS1", 'B1', (get_node_data(circuit, last_node_ID(circuit))[0]+100-131, get_node_data(circuit, last_node_ID(circuit))[1]+13.5-104, 'resources/images/highlighted_bulb_off_withWire.png'))
-                else:
-                    count = random.randint(1, 500)
-                    while "B" + str(count) in circuit.keys():
-                        count = random.randint(2, 500)    
-                    add_connection(circuit, last_node_ID(circuit), 'B'+str(count), (get_node_data(circuit, last_node_ID(circuit))[0]-131, get_node_data(circuit, last_node_ID(circuit))[1], 'resources/images/highlighted_bulb_off_withWire.png'))
-                component = ''
-                time.sleep(0.5)
+                id = random.randint(2,10000)
+                while "B" + str(id) in circuit:
+                    id = random.randint(2, 10000)
+                id = 'B'+str(id)
+                position = (near_division_multiple(division, mouse_pos[0]-70), near_division_multiple(division, mouse_pos[1]-70))
+
+                start = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0]+140 == position[0] and circuit[i][1][1] == position[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][21] == '0' or circuit[i][1][2][20] == '0':
+                            if circuit[i][1][0]+140 == position[0] and circuit[i][1][1] == position[1]:
+                                circuit[i] = (circuit[i][0], circuit[i][1], id)
+                                start = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][2] == position[0] and circuit[i][1][3] == position[1]+70:
+                            circuit[i] = (circuit[i][0], circuit[i][1], id)
+                            start = i
+                            break
+
+                end = None
+                for i in circuit:
+                    if i[0] == 'B':
+                        if circuit[i][1][2][21] == '1' or circuit[i][1][2][20] == '1':
+                            if circuit[i][1][0] == position[0]+140 and circuit[i][1][1] == position[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'P':
+                        if circuit[i][1][2][21] == '0' or circuit[i][1][2][20] == '0':
+                            if circuit[i][1][0] == position[0]+140 and circuit[i][1][1] == position[1]:
+                                circuit[i] = (id, circuit[i][1], circuit[i][2])
+                                end = i
+                                break
+                    if i[0] == 'L':
+                        if circuit[i][1][0] == position[0]+140 and circuit[i][1][1] == position[1]+70:
+                            circuit[i] = (id, circuit[i][1], circuit[i][2])
+                            end = i
+                            break
+                            
+
+                circuit[id] = (start, (position[0], position[1], 'resources/images/off_180_b_img.png'), end)
+
+            component = '' 
+            time.sleep(0.2)
+    
+
+  
+
+
 
     for i in circuit:
-        if circuit[i][1] != None:
-            img = circuit[i][1][2]
-            if "highlighted" and "bulb" in img: 
-                if i[:2] == 'PS':
-                    window.blit(wired_battery, )
-                    img = pygame.image.load("resources/images/highlighted_bulb_off_withWire.png")
-                    scaled_img = pygame.transform.scale(img, (131,193))
-                    window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
-                else:
-                    img = pygame.image.load("resources/images/bulb_off_withWire.png")
-                    scaled_img = pygame.transform.scale(img, (131,131))
-                    window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
+        if i[0] == 'L':
+
+            pygame.draw.line(window, WIRE_COLOR, 
+                [circuit[i][1][0], circuit[i][1][1]], 
+                [circuit[i][1][2], circuit[i][1][3]], 5)
+
+        elif circuit[i][1] != None:
+
+            img = pygame.image.load(circuit[i][1][2])
+            scaled_img = pygame.transform.scale(img, (140,140))
+            window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
+
+
+    
+    print(circuit)
+    print()
+
+
+
 
     # Update the display
     pygame.display.update()
 
     # Cap the frame rate
     pygame.time.Clock().tick(30)
-    print(circuit)
 
 
 
