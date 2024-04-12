@@ -121,7 +121,7 @@ highlight_img = pygame.image.load('resources/images/highlight.png')
 
 
 circuit = {
-    'PS1': ('NS1', (700, 700, 'resources/images/on_0_ps_img.png'), None)
+    'PS1': (None, (200, 200, 'resources/images/on_0_ps_img.png'), None)
 }
 
 
@@ -406,7 +406,7 @@ while True:
                                 end = i
                                 break
                     if i[0] == 'L':
-                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][2] == line_ending_point[1]:
+                        if circuit[i][1][0] == line_ending_point[0] and circuit[i][1][1] == line_ending_point[1]:
                             circuit[i] = (id, circuit[i][1], circuit[i][2])
                             end = i
                             break
