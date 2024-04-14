@@ -191,7 +191,7 @@ scaled_playbutton = pygame.transform.scale(playbutton_img, (scaled_playbutton_si
 
 scaled_playbutton.set_alpha(128)
 
-playbutton_rect = scaled_playbutton.get_rect(topleft = (1150, 70))
+playbutton_rect = scaled_playbutton.get_rect(topleft = (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.09))
 
 # # Electron:
 
