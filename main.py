@@ -48,6 +48,12 @@ def near_division_multiple(division, number):
         while a%division != 0:
             a-=1
         return a
+    
+
+def next_component_dimensions(circuit, current_component):
+    next_componet = circuit[current_component][2]
+    print(current_component, next_componet)
+    return (circuit[next_componet][1][0], circuit[next_componet][1][1])
 
 
 
@@ -79,6 +85,7 @@ pygame.init()
 
 window = pygame.display.set_mode()
 WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
+print(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 
 
@@ -113,7 +120,6 @@ highlight_img = pygame.image.load('resources/images/highlight.png')
 
 
 
-
 #Creating Linked list
 
 
@@ -134,6 +140,7 @@ division = 70
 create_line = False
 WIRE_COLOR = (0,0,0)
 GRID_COLOR = (180,180,180)
+simulation = False
 
 
 
@@ -151,6 +158,7 @@ WHITE = (255, 255, 255)
 OFF_WHITE = (200,200,200)
 RED = (255, 0, 0)
 LIGHT_BLUE = (64, 64, 128)
+YELLOW = ((255, 255, 102))
 
 # Menu Tools Constants
 tools_width = 100
@@ -173,10 +181,27 @@ menu_scaled_tool_size = (480*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 480*WINDOW_WIDTH//
 
 point_scaled_tool_size = (100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE, 100*WINDOW_WIDTH//TOOLS_BUTTON_SIZE)
 
+# Playbutton:
 
+playbutton_img = pygame.image.load("resources/images/play_button_img.png")
 
+scaled_playbutton_size = (40*WINDOW_WIDTH//873, 40*WINDOW_WIDTH//873)
 
+scaled_playbutton = pygame.transform.scale(playbutton_img, (scaled_playbutton_size))
 
+scaled_playbutton.set_alpha(128)
+
+playbutton_rect = scaled_playbutton.get_rect(topleft = (1150, 70))
+
+# # Electron:
+
+# electron_img = pygame.image.load("resources\images\electron_img.png")
+
+# scaled_electron_size = (20*WINDOW_WIDTH//1080, 20*WINDOW_WIDTH//1080)
+
+# scaled_electron = pygame.transform.scale(electron_img, scaled_electron_size)
+
+# scaled_electron.set_alpha(128)
 
 
 
@@ -207,9 +232,6 @@ menu_open = False
 
 # Main game loop
 while True:
-
-
-
 
     # Handle events
     for event in pygame.event.get():
@@ -308,8 +330,11 @@ while True:
     # Fill the background
     window.fill(OFF_WHITE)
 
+    
 
 
+
+    
     # Draw Grid
     temp325 = 1
     while division*temp325 <= WINDOW_WIDTH:
@@ -625,8 +650,51 @@ while True:
             scaled_img = pygame.transform.scale(img, (140,140))
             window.blit(scaled_img, (circuit[i][1][0], circuit[i][1][1]))
 
-
     
+    # Place the play button
+    
+    window.blit(scaled_playbutton, playbutton_rect)
+    if is_hovering(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.09),(WINDOW_WIDTH*0.9+playbutton_rect.width,WINDOW_HEIGHT*0.09+playbutton_rect.height)) ,mouse_pos):
+        button_highlight_img = pygame.transform.scale_by(button_highlight_img, 1.25)
+        window.blit(button_highlight_img, (WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.09))
+    
+    # Start the simulation
+    if is_clicked(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.09),(WINDOW_WIDTH*0.9+playbutton_rect.width,WINDOW_HEIGHT*0.09+playbutton_rect.height)) ,mouse_pos, mouse):
+        simulation = True
+    
+    if simulation:
+        for i in circuit:
+            if "L" not in i:
+                count = 70
+                while count < 130:
+                    count += 30
+                    electron_line_coordinates = (circuit[i][1][0] + count, circuit[i][1][1]+70)
+                    pygame.draw.line(window,YELLOW, electron_line_coordinates, (electron_line_coordinates[0]+10, electron_line_coordinates[1]), 5)
+            else:
+                count = 0
+                if circuit[i][1][1] == circuit[i][1][3]:
+                    if circuit[i][1][0]-circuit[i][1][2] > 0:
+                        while count < circuit[i][1][0]-circuit[i][1][2]-30:
+                            count += 30
+                            electron_line_coordinates = (circuit[i][1][0]-count, circuit[i][1][1])
+                            pygame.draw.line(window, YELLOW, electron_line_coordinates, (electron_line_coordinates[0]-10, electron_line_coordinates[1]), 5)
+                    elif circuit[i][1][0]-circuit[i][1][2] < 0:
+                        while count < circuit[i][1][2]-circuit[i][1][0]-30:
+                            count += 30
+                            electron_line_coordinates = (circuit[i][1][0]+count, circuit[i][1][1])
+                            pygame.draw.line(window, YELLOW, electron_line_coordinates, (electron_line_coordinates[0]+10, electron_line_coordinates[1]), 5)                    
+                elif circuit[i][1][0] == circuit[i][1][2]:
+                    if circuit[i][1][1]-circuit[i][1][3] > 0:
+                        while count < circuit[i][1][1]-circuit[i][1][3]-30:
+                            count += 30
+                            electron_line_coordinates = (circuit[i][1][0], circuit[i][1][1]-count)
+                            pygame.draw.line(window, YELLOW, electron_line_coordinates, (electron_line_coordinates[0], electron_line_coordinates[1]-10), 5)
+                    elif circuit[i][1][1]-circuit[i][1][3] < 0:        
+                        while count < circuit[i][1][3]-circuit[i][1][1]-30:
+                            count += 30
+                            electron_line_coordinates = (circuit[i][1][0], circuit[i][1][1]+count)
+                            pygame.draw.line(window, YELLOW, electron_line_coordinates, (electron_line_coordinates[0], electron_line_coordinates[1]+10), 5)   
+                
 
     print(circuit)
 
