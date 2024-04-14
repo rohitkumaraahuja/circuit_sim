@@ -495,10 +495,10 @@ while True:
                             break
                 
                 circuit[id] = (start, (init_mouse_pos[0], init_mouse_pos[1], line_ending_point[0], line_ending_point[1]), end)
-
-            create_line = not create_line
-            init_mouse_pos = (near_division_multiple(division, mouse_pos[0]), near_division_multiple(division, mouse_pos[1]))
-            time.sleep(0.2)
+            if is_clicked(((WINDOW_WIDTH*0.9,WINDOW_HEIGHT*0.09),(WINDOW_WIDTH*0.9+playbutton_rect.width,WINDOW_HEIGHT*0.09+playbutton_rect.height)) ,mouse_pos, mouse) == False:
+                create_line = not create_line
+                init_mouse_pos = (near_division_multiple(division, mouse_pos[0]), near_division_multiple(division, mouse_pos[1]))
+                time.sleep(0.2)
 
 
     if create_line:
@@ -600,7 +600,7 @@ while True:
                                 circuit[i] = (circuit[i][0], circuit[i][1], id)
                                 start = i
                                 break
-                    if i[0] == 'L':
+                    if i[0] == 'L' and (abs(circuit[i][1][0]-circuit[i][1][2]) > 10 or abs(circuit[i][1][1]-circuit[i][1][3]) > 10):
                         if circuit[i][1][2] == position[0] and circuit[i][1][3] == position[1]+70:
                             circuit[i] = (circuit[i][0], circuit[i][1], id)
                             start = i
